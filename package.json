@@ -7,7 +7,7 @@
     "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
     "nx": "nx",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "curate": "ng curate",
     "test": "ng test",
     "lint": "nx workspace-lint && ng lint",
