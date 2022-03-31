@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: https://d2ibmhd3aj0msb.cloudfront.net
+      url: https://warrendugan.com
     steps:
       - name: Checkout [pr]
         if: ${{ github.event_name == 'pull_request' }}
