@@ -126,7 +126,7 @@
           "builder": "@nrwl/workspace:run-commands",
           "options": {
             "cwd": "dist/apps/www/",
-            "command": "npx pwa-asset-generator ./assets/wdlogo.svg -i ./index.html -m ./assets/manifest.webmanifest --favicon --path-override=https://warrendugan.com/assets/"
+            "command": "npx pwa-asset-generator ./assets/wdlogo.svg ./assets/ -i ./index.html -m ./assets/manifest.webmanifest --favicon --path-override=https://warrendugan.com/assets/"
           }
         },
         "sync": {
