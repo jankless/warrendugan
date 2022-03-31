@@ -1,0 +1,66 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://d2ibmhd3aj0msb.cloudfront.net
+    steps:
+      - name: Checkout [pr]
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Checkout
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set SHAs
+        uses: nrwl/nx-set-shas@v2
+
+      - name: Use Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+
+      - name: Cache Configuration
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        if: success()
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: 'Sync GitHub Artifact with S3 Bucket'
+        if: success()
+        run: npm run sync
+        env:
+          bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
+
+      - name: 'Invalidate CloudFront Distribution Cache'
+        if: success()
+        run: npm run invalidate
+        env:
+          id: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}

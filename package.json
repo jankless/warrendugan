@@ -25,7 +25,9 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "sync": "nx run-many --target=sync --all --bucket=$bucket",
+    "invalidate": "nx run-many --target=invalidate --all --id=$id"
   },
   "private": true,
   "dependencies": {

@@ -47,8 +47,13 @@
             "polyfills": "apps/www/src/polyfills.ts",
             "tsConfig": "apps/www/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/www/src/favicon.ico", "apps/www/src/assets"],
-            "styles": ["apps/www/src/styles.scss"],
+            "assets": [
+              "apps/www/src/favicon.ico",
+              "apps/www/src/assets"
+            ],
+            "styles": [
+              "apps/www/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -109,10 +114,24 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/www"],
+          "outputs": [
+            "coverage/apps/www"
+          ],
           "options": {
             "jestConfig": "apps/www/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "sync": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "aws s3 sync dist/apps/www s3://{args.bucket} --acl public-read --delete --cache-control max-age=604800"
+          }
+        },
+        "invalidate": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "aws cloudfront create-invalidation --distribution-id {args.id} --paths /index.html"
           }
         }
       }
@@ -138,7 +157,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/www-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/www-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
