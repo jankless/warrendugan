@@ -1,0 +1,10 @@
+{
+    "name": "WarrenDugan",
+    "short_name": "WD",
+    "theme_color": "#1976d2",
+    "background_color": "#fafafa",
+    "display": "standalone",
+    "scope": "https://warrendugan.com",
+    "start_url": "https://warrendugan.com",
+    "icons": []
+}
